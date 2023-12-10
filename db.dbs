@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MySql" id="Project-1ce" database="MySql" >
+	<schema name="multimodal" >
+		<table name="alumno" spec="" >
+			<column name="nombre_alumno" prior="nombre_completo" type="CHAR" length="50" jt="1" mandatory="y" >
+				<comment><![CDATA[Nombre completo del alumno.]]></comment>
+			</column>
+			<column name="matricula" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="lugar_nac" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="nacionalidad" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="fecha_nac" type="DATE" jt="91" mandatory="y" />
+			<column name="curp" type="CHAR" length="17" jt="1" mandatory="y" />
+			<column name="telefono" type="INT" jt="4" mandatory="y" unsigned="y" />
+			<column name="correo" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="domicilio" type="VARCHAR" length="225" jt="12" mandatory="y" />
+			<column name="tipo_sangre" type="ENUM" jt="12" mandatory="y" >
+				<enumeration><![CDATA['A+','A-','B+','B-','O+','O-']]></enumeration>
+			</column>
+			<column name="alergias" type="VARCHAR" length="225" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+			</column>
+			<column name="enfermedades_cronicas" type="VARCHAR" length="225" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+			</column>
+			<column name="servicio_med" type="VARCHAR" length="225" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+			</column>
+			<column name="estatus" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="plan_estudios" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="cve_carrera" type="CHAR" length="1" jt="1" />
+			<index name="pk_alumno" unique="PRIMARY_KEY" >
+				<column name="curp" />
+			</index>
+			<index name="unq_alumno_matricula" unique="UNIQUE_KEY" >
+				<column name="matricula" />
+			</index>
+			<index name="unq_alumno_curp" unique="UNIQUE_KEY" >
+				<column name="curp" />
+				<column name="matricula" />
+			</index>
+			<index name="unq_alumno_matricula_0" unique="UNIQUE_KEY" >
+				<column name="matricula" />
+				<column name="curp" />
+			</index>
+			<index name="fk_alumno_carrera" unique="NORMAL" >
+				<column name="cve_carrera" />
+				<column name="plan_estudios" />
+			</index>
+			<fk name="fk_alumno_carrera" to_schema="multimodal" to_table="carrera" >
+				<fk_column name="cve_carrera" pk="cve_carrera" />
+				<fk_column name="plan_estudios" pk="plan_estudios" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="calificacion_semestre" >
+			<column name="matricula" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="curp" type="CHAR" length="17" jt="1" mandatory="y" />
+			<column name="cve-uac" type="CHAR" length="4" jt="1" mandatory="y" />
+			<column name="tipo_grupo" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="primer_par" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="segundo_par" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="tercer_par" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="extraordinario" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="intersemestral" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="cve_grupo" type="CHAR" length="5" jt="1" mandatory="y" />
+			<index name="fk_calificacion_semestre" unique="NORMAL" >
+				<column name="matricula" />
+				<column name="curp" />
+			</index>
+			<fk name="fk_calificacion_semestre" to_schema="multimodal" to_table="alumno" >
+				<fk_column name="matricula" pk="matricula" />
+				<fk_column name="curp" pk="curp" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="carrera" >
+			<column name="cve_carrera" type="CHAR" length="1" jt="1" mandatory="y" />
+			<column name="nombre_carrera" type="VARCHAR" length="25" jt="12" mandatory="y" />
+			<column name="plan_estudios" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="creditos_carrera" type="DOUBLE" jt="8" mandatory="y" />
+			<index name="pk_carrera" unique="PRIMARY_KEY" >
+				<column name="cve_carrera" />
+			</index>
+			<index name="unq_carrera_cve_carrera" unique="UNIQUE_KEY" >
+				<column name="cve_carrera" />
+				<column name="plan_estudios" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="grupo" >
+			<column name="cve_secuencia" type="CHAR" length="5" jt="1" mandatory="y" />
+			<column name="cve_uac" type="CHAR" length="4" jt="1" mandatory="y" />
+			<column name="tipo_grupo" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="no_profesor" prior="no_empleado" type="CHAR" length="50" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<column name="cve_periodo" type="CHAR" length="20" jt="1" />
+			<column name="clase_l" type="CHAR" length="11" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<column name="clase_m" type="CHAR" length="11" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<column name="clase_w" type="CHAR" length="11" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<column name="clase_j" type="CHAR" length="11" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<column name="clase_v" type="CHAR" length="11" jt="1" >
+				<defo><![CDATA['null']]></defo>
+			</column>
+			<index name="unq_grupo_cve_secuencia" unique="UNIQUE_KEY" >
+				<column name="cve_secuencia" />
+				<column name="tipo_grupo" />
+				<column name="cve_uac" />
+			</index>
+			<index name="fk_grupo_periodo" unique="NORMAL" >
+				<column name="cve_periodo" />
+			</index>
+			<index name="fk_grupo_u_aprendizaje" unique="NORMAL" >
+				<column name="cve_uac" />
+			</index>
+			<index name="fk_grupo_profesor" unique="NORMAL" >
+				<column name="no_profesor" />
+			</index>
+			<fk name="fk_grupo_periodo" to_schema="multimodal" to_table="periodo" >
+				<fk_column name="cve_periodo" pk="cve_periodo" />
+			</fk>
+			<fk name="fk_grupo_secuencia" to_schema="multimodal" to_table="secuencia" >
+				<fk_column name="cve_secuencia" pk="cve_secuencia" />
+			</fk>
+			<fk name="fk_grupo_u_aprendizaje" to_schema="multimodal" to_table="u_aprendizaje" >
+				<fk_column name="cve_uac" pk="cve_uac" />
+			</fk>
+			<fk name="fk_grupo_profesor" to_schema="multimodal" to_table="profesor" >
+				<fk_column name="no_profesor" pk="no_profesor" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="historial_alumno" >
+			<column name="curp" type="CHAR" length="17" jt="1" mandatory="y" />
+			<column name="matricula" type="TINYINT" jt="-6" unsigned="y" />
+			<column name="cve_secuencia_h" type="CHAR" length="5" jt="1" mandatory="y" />
+			<column name="cve_uac_h" type="CHAR" length="4" jt="1" mandatory="y" />
+			<column name="cve_periodo" type="CHAR" length="20" jt="1" mandatory="y" />
+			<column name="calificacion_historial" type="SMALLINT" jt="5" mandatory="y" />
+			<index name="fk_historial_alumno_alumno" unique="NORMAL" >
+				<column name="curp" />
+				<column name="matricula" />
+			</index>
+			<index name="fk_historial_alumno_periodo" unique="NORMAL" >
+				<column name="cve_periodo" />
+			</index>
+			<fk name="fk_historial_alumno_alumno" to_schema="multimodal" to_table="alumno" >
+				<fk_column name="curp" pk="curp" />
+				<fk_column name="matricula" pk="matricula" />
+			</fk>
+			<fk name="fk_historial_alumno_periodo" to_schema="multimodal" to_table="periodo" >
+				<fk_column name="cve_periodo" pk="cve_periodo" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="periodo" >
+			<column name="cve_periodo" type="CHAR" length="20" jt="1" mandatory="y" />
+			<column name="tipo_periodo" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="fecha_ini" type="DATE" jt="91" mandatory="y" />
+			<column name="fecha_fin" type="DATE" jt="91" mandatory="y" />
+			<index name="pk_periodo" unique="PRIMARY_KEY" >
+				<column name="cve_periodo" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="profesor" >
+			<column name="no_profesor" type="CHAR" length="3" jt="1" mandatory="y" />
+			<column name="nombre_profesor" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="academias" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<column name="tel_profesor" type="CHAR" length="13" jt="1" />
+			<column name="correo_e" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_profesor" unique="PRIMARY_KEY" >
+				<column name="no_profesor" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="secuencia" >
+			<column name="cve_secuencia" type="CHAR" length="5" jt="1" mandatory="y" />
+			<column name="nivel" type="CHAR" length="1" jt="1" mandatory="y" />
+			<column name="nombre_carrera" type="VARCHAR" length="25" jt="12" mandatory="y" />
+			<column name="turno" type="CHAR" length="1" jt="1" mandatory="y" />
+			<column name="periodo" type="CHAR" length="1" jt="1" mandatory="y" />
+			<column name="no_grupo" type="CHAR" length="1" jt="1" mandatory="y" />
+			<index name="pk_secuencia" unique="PRIMARY_KEY" >
+				<column name="cve_secuencia" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="secundaria" >
+			<column name="nombre" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="tipo_secundaria" type="ENUM" jt="12" mandatory="y" >
+				<enumeration><![CDATA['PUBLICA','PRIVADA']]></enumeration>
+			</column>
+			<column name="modalidad" type="ENUM" jt="12" mandatory="y" >
+				<enumeration><![CDATA['GENERAL','TECNICA','TELESECUNDARIA','INEA','PARA TRABAJADORES','COMUNITARIA']]></enumeration>
+			</column>
+			<column name="entidad_secundaria" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="promedio" type="TINYINT" jt="-6" mandatory="y" unsigned="y" />
+			<column name="generacion" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="folio_certificado" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="expedicion" type="DATE" jt="91" mandatory="y" />
+			<column name="curp" type="CHAR" length="17" jt="1" mandatory="y" />
+			<column name="cct" type="CHAR" length="225" jt="1" mandatory="y" />
+			<index name="pk_secundaria" unique="PRIMARY_KEY" >
+				<column name="cct" />
+			</index>
+			<index name="fk_secundaria_alumno" unique="NORMAL" >
+				<column name="curp" />
+			</index>
+			<fk name="fk_secundaria_alumno" to_schema="multimodal" to_table="alumno" >
+				<fk_column name="curp" pk="curp" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="tutor2" >
+			<column name="curp" type="CHAR" length="17" jt="1" mandatory="y" />
+			<column name="nombre" type="CHAR" length="225" jt="1" />
+			<column name="ocupacion" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="telefono casa" type="INT" jt="4" mandatory="y" unsigned="y" />
+			<column name="telefono celular" type="INT" jt="4" mandatory="y" unsigned="y" />
+			<column name="telefono trabajo" type="INT" jt="4" mandatory="y" unsigned="y" />
+			<column name="correo_e" prior="email" type="CHAR" length="225" jt="1" mandatory="y" />
+			<index name="fk_tutor_alumno" unique="NORMAL" >
+				<column name="curp" />
+			</index>
+			<fk name="fk_tutor_alumno" to_schema="multimodal" to_table="alumno" >
+				<fk_column name="curp" pk="curp" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="u_aprendizaje" >
+			<column name="cve_uac" type="CHAR" length="4" jt="1" mandatory="y" />
+			<column name="nombre_uac" type="CHAR" length="225" jt="1" mandatory="y" />
+			<column name="tipo_uac" type="VARCHAR" length="70" jt="12" mandatory="y" />
+			<column name="horas-teoria-sem" type="DECIMAL" length="4" decimal="2" jt="3" mandatory="y" />
+			<column name="horas_practicas_sem" type="DECIMAL" length="4" decimal="2" jt="3" mandatory="y" />
+			<column name="periodo_uac" type="SMALLINT" jt="5" mandatory="y" />
+			<column name="cve_carrera" type="CHAR" length="1" jt="1" />
+			<column name="plan_estudios" type="CHAR" length="10" jt="1" />
+			<index name="pk_u_aprendizaje" unique="PRIMARY_KEY" >
+				<column name="cve_uac" />
+			</index>
+			<index name="fk_u_aprendizaje_carrera" unique="NORMAL" >
+				<column name="cve_carrera" />
+				<column name="plan_estudios" />
+			</index>
+			<fk name="fk_u_aprendizaje_carrera" to_schema="multimodal" to_table="carrera" >
+				<fk_column name="cve_carrera" pk="cve_carrera" />
+				<fk_column name="plan_estudios" pk="plan_estudios" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<layout name="Main Layout" id="Layout-3a0" show_relation="columns" >
+		<entity schema="multimodal" name="alumno" color="C1D8EE" x="480" y="112" />
+		<entity schema="multimodal" name="calificacion_semestre" color="C1D8EE" x="736" y="592" />
+		<entity schema="multimodal" name="carrera" color="C1D8EE" x="752" y="272" />
+		<entity schema="multimodal" name="grupo" color="C1D8EE" x="752" y="48" />
+		<entity schema="multimodal" name="historial_alumno" color="C1D8EE" x="48" y="576" />
+		<entity schema="multimodal" name="periodo" color="C1D8EE" x="240" y="432" />
+		<entity schema="multimodal" name="profesor" color="C1D8EE" x="400" y="496" />
+		<entity schema="multimodal" name="secuencia" color="C1D8EE" x="960" y="608" />
+		<entity schema="multimodal" name="secundaria" color="C1D8EE" x="96" y="128" />
+		<entity schema="multimodal" name="tutor2" color="C1D8EE" x="272" y="192" />
+		<entity schema="multimodal" name="u_aprendizaje" color="C1D8EE" x="720" y="400" />
+	</layout>
+</project>
